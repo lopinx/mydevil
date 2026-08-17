@@ -7,12 +7,9 @@
 ## 目录结构
 
 ```
-```
 persistent/home/lopins/Documents/Codes/mydevil/
 ├── src\
 │   └── main.js          # 主程序：Puppeteer 登录逻辑
-├── docs\
-│   └── index.html       # JSON 生成器前端页面（静态站点）
 ├── .github\
 │   └── workflows\
 │       └── login.yml    # GitHub Actions 工作流配置
@@ -85,4 +82,3 @@ node src/main.js
 ## 相关文档
 
 - README_CN.md — 中文说明
-- docs/index.html — JSON 生成器前端

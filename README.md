@@ -53,8 +53,6 @@
 
 ### Step 2: Create `ACCOUNTS_JSON` Secret
 
-[Generate JSON here](https://lopinx.github.io/mydevil/)
-
 ```json
 [
   { "username": "your_username", "password": "your_password", "panel": "panel3.serv00.com" },
@@ -90,8 +88,6 @@ To receive login result push notifications via Telegram or Enterprise WeChat, cr
 mydevil/
 ├── src/
 │   └── main.js          # Main entry point
-├── docs/
-│   └── index.html       # JSON generator page
 ├── .github/
 │   └── workflows/
 │       └── login.yml    # GitHub Actions config
@@ -107,7 +103,6 @@ mydevil/
 
 ## 🔗 Related Links
 
-- [JSON Generator](https://lopinx.github.io/mydevil/) — Visual account configuration generator
 - [Serv00 PHP Config](https://docs.serv00.com/PHP/#php-version)
 - [Memcached Config](https://docs.serv00.com/Memcached/) — Start command: `memcached -s /usr/home/lopins/domains/buchmistrz.pl/memcached.sock -m 32 -d`
 - [Redis Config](https://docs.serv00.com/Memcached/)
