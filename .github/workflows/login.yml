@@ -15,9 +15,8 @@ on:
 
 env:
   ACCOUNTS_JSON: ${{ secrets.ACCOUNTS_JSON }}
-  TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-  TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-  WECOM_KEY: ${{ secrets.WECOM_KEY }}
+  NOTIFY_TOKEN: ${{ secrets.NOTIFY_TOKEN }}
+  NOTIFY_ID: ${{ secrets.NOTIFY_ID }}
 
 jobs:  
   login:  
