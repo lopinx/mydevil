@@ -60,9 +60,11 @@ async function sendNotifications(token, id, message) {
         try {
             await page.goto(url);
 
-            await page.click('input[name="username"]');
-            await page.keyboard.press('Control+a');
-            await page.keyboard.press('Backspace');
+            const usernameInput = await page.$('input[name="username"]');
+            if (usernameInput) {
+                await usernameInput.click({ clickCount: 3 });
+                await page.keyboard.press('Backspace');
+            }
             await page.type('input[name="username"]', username);
             await page.type('input[name="password"]', password);
 
