@@ -22,14 +22,10 @@ async function sendWecomMessage(token, id, message) {
 }
 
 async function sendNotifications(token, id, message) {
-    const tasks = [];
-    if (token && id) {
-        const isWecom = !token.includes(':');
-        tasks.push(isWecom
-            ? sendWecomMessage(token, id, message)
-            : sendTelegramMessage(token, id, message));
-    }
-    await Promise.all(tasks);
+    if (!token || !id) return;
+    const isWecom = !token.includes(':');
+    const sendFn = isWecom ? sendWecomMessage : sendTelegramMessage;
+    await sendFn(token, id, message);
 }
 
 (async () => {
