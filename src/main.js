@@ -38,6 +38,8 @@ async function sendNotifications(token, id, message) {
     const notifyToken = process.env.NOTIFY_TOKEN;
     const notifyId = process.env.NOTIFY_ID;
 
+    const results = [];
+
     for (const account of accounts) {
         const { username, password, panel } = account;
 
@@ -77,16 +79,16 @@ async function sendNotifications(token, id, message) {
                 document.querySelector('a[href="/logout/"]') !== null
             );
 
-            const message = isLoggedIn
-                ? `账号 ${username} 登录成功！`
-                : `账号 ${username} 登录失败，请检查账号和密码是否正确。`;
-            await sendNotifications(notifyToken, notifyId, message);
+            results.push(`${username}: ${isLoggedIn ? '登录成功' : '登录失败'}`);
         } catch (error) {
-            await sendNotifications(notifyToken, notifyId, `账号 ${username} 登录时出现错误: ${error.message}`);
+            results.push(`${username}: 错误 - ${error.message}`);
         } finally {
             await page.close();
             await browser.close();
             await new Promise(resolve => setTimeout(resolve, Math.random() * 4000 + 1000));
         }
     }
+
+    const message = `共 ${results.length} 个账号\n${results.join('\n')}`;
+    await sendNotifications(notifyToken, notifyId, message);
 })();
