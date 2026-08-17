@@ -4,10 +4,6 @@ import puppeteer from 'puppeteer';
 import axios from 'axios';
 import { fileURLToPath } from 'url';
 
-function formatToISO(date) {
-    return date.toISOString().replace('T', ' ').replace('Z', '').replace(/\.\d{3}Z/, '');
-}
-
 async function delayTime(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -95,9 +91,7 @@ async function sendNotifications(token, id, message) {
             });
 
             if (isLoggedIn) {
-                const nowUtc = formatToISO(new Date());
-                const nowBeijing = formatToISO(new Date(new Date().getTime() + 8 * 60 * 60 * 1000));
-                const successMessage = `账号 ${username} 于北京时间 ${nowBeijing}（UTC时间 ${nowUtc}）登录成功！`;
+                const successMessage = `账号 ${username} 登录成功！`;
                 await sendNotifications(notifyToken, notifyId, successMessage);
             } else {
                 const failMessage = `账号 ${username} 登录失败，请检查账号和密码是否正确。`;
