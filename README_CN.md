@@ -53,8 +53,6 @@
 
 ### 第二步：创建 `ACCOUNTS_JSON` Secret
 
-[点击此处生成 JSON](https://lopinx.github.io/mydevil/)
-
 ```json
 [
   { "username": "your_username", "password": "your_password", "panel": "panel3.serv00.com" },
@@ -90,8 +88,6 @@
 mydevil/
 ├── src/
 │   └── main.js          # 主程序入口
-├── docs/
-│   └── index.html       # JSON 生成器页面
 ├── .github/
 │   └── workflows/
 │       └── login.yml    # GitHub Actions 配置
@@ -107,7 +103,6 @@ mydevil/
 
 ## 🔗 相关链接
 
-- [JSON 生成器](https://lopinx.github.io/mydevil/) — 可视化生成账号配置
 - [Serv00 PHP 配置](https://docs.serv00.com/PHP/#php-version)
 - [Memcached 配置](https://docs.serv00.com/Memcached/) — 启动命令：`memcached -s /usr/home/lopins/domains/buchmistrz.pl/memcached.sock -m 32 -d`
 - [Redis 配置](https://docs.serv00.com/Memcached/)
