@@ -1,7 +1,7 @@
 {
-  "name": "serv00-auto-scripts",
+  "name": "mydevil",
   "version": "1.0.0",
-  "description": "Serv00/CT8 - Free Host Auto Renewal (Automatic SSH and PM2) and Other Scripts",
+  "description": "Serv00/CT8 - Free Host Auto Renewal",
   "type": "module",
   "main": "src/main.js",
   "directories": {
@@ -13,9 +13,9 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "WTFPL",
   "dependencies": {
-    "axios": "^1.7.7",
-    "puppeteer": "^23.7.0"
+    "axios": "^1.19.0",
+    "puppeteer": "^25.8.0"
   }
 }

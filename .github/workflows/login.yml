@@ -15,29 +15,29 @@ on:
 
 env:
   ACCOUNTS_JSON: ${{ secrets.ACCOUNTS_JSON }}
-  TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-  TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+  NOTIFY_TOKEN: ${{ secrets.NOTIFY_TOKEN }}
+  NOTIFY_ID: ${{ secrets.NOTIFY_ID }}
 
-jobs:  
-  login:  
-    runs-on: ubuntu-latest  
-  
-    steps:  
-      - name: Checkout repository  
+jobs:
+  login:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Create accounts.json
         run: echo "$ACCOUNTS_JSON" > accounts.json
-  
-      - name: Set up Node.js  
-        uses: actions/setup-node@v4  
-        with:  
-          node-version: '20.x'  
-  
-      - name: Install dependencies  
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+
+      - name: Install dependencies
         run: npm install puppeteer axios
-  
+
       - name: Login into Serv00/CT8
-        run: |  
-          set -e  
+        run: |
+          set -e
           xvfb-run --server-args="-screen 0 1280x1024x24" node src/main.js

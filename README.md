@@ -2,100 +2,115 @@
    <a href="README_CN.md">中文</a> | <strong>English</strong>
 </div>
 
-<img src="https://www.serv00.com/static/ct8/img/logo.jpg" alt="serv00 logo" width="50" height="50" align="right" />
-
 <div align="center">
 
-<h1> serv00-auto-scripts </h1>
+<h1>🔄 Serv00/CT8 Free Host Auto Renewal</h1>
 
-<p>Serv00/CT8 - Free Host Auto Renewal (Automatic SSH and PM2) and Other Scripts</p>
+<p>GitHub Actions tool for auto-renewing Serv00 / CT8 free hosting accounts</p>
+
+[![License](https://img.shields.io/badge/license-WTFPL-blue)](./LICENSE)
+[![Node.js](https://img.shields.io/badge/Node.js-20+-green)](https://nodejs.org/)
+[![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-✓-orange)](https://github.com/features/actions)
+[![Puppeteer](https://img.shields.io/badge/Puppeteer-v24-brightgreen)](https://pptr.dev/)
 
 </div>
 
 <hr/>
 
 <div align="center">
-<a href="https://panel.serv00.com/">serv00 Demo</a> | 
-<a href="https://www.serv00.com/">serv00 Official</a> | 
-<a href="https://docs.serv00.com/">serv00 Docs</a> | 
-<a href="https://forum.serv00.com/">serv00 Forum</a>
+
+🔗 **Links** &nbsp;|&nbsp;
+[Serv00 Login](https://www.serv00.com/sign-in/) &nbsp;|&nbsp;
+[Serv00 Docs](https://docs.serv00.com/) &nbsp;|&nbsp;
+[Serv00 Forum](https://forum.serv00.com/) &nbsp;|&nbsp;
+[CT8 Login](https://panel.ct8.pl/) &nbsp;|&nbsp;
+[CT8 Docs](https://pomoc.mydevil.net/) &nbsp;|&nbsp;
+[CT8 Forum](https://forum.ct8.pl/)
+
 </div>
 
 <hr/>
 
-<div align="center">
-<a href="https://panel.ct8.pl/">CT8 Demo</a> | 
-<a href="https://www.ct8.pl/">CT8 Official</a> | 
-<a href="https://wiki.mydevil.net/">CT8 Docs</a> | 
-<a href="https://forum.ct8.pl/">CT8 Forum</a>
-</div>
+## ✨ Features
 
-<hr/>
+| Feature | Description |
+|---------|-------------|
+| 🤖 **Auto Login** | Uses Puppeteer to automate browser login to control panels |
+| 📅 **Scheduled Tasks** | GitHub Actions runs automatically on the 1st of every month |
+| 🔔 **Notifications** | Supports Telegram Bot and WeChat Work (Enterprise WeChat) to push login results |
+| 🔒 **Secure Storage** | Account info stored as GitHub Secrets |
+| 🌐 **Multi-Panel Support** | Compatible with all panel1~panelN Serv00/CT8 panels |
 
-## Usage
+## 📋 Usage
 
-1. In the GitHub repository, go to the top right corner and click on `Settings`
+### Step 1: Configure GitHub Secrets
 
-2. On the sidebar, find `Secrets and variables`, click to expand and select `Actions`, then click `New repository secret`
-    
-3. Then [create](https://lopins.github.io/serv00-auto-scripts/) a `Secret` named `ACCOUNTS_JSON`, set its value as the account and password string in JSON format, as follows:  
+1. Go to your GitHub repository, click **Settings** ⚙️ in the top right corner
+2. In the sidebar, find **Secrets and variables** → **Actions**
+3. Click **New repository secret**
 
-``` json
-[  
-  { "username": "qishihuang", "password": "zhanghao", "panel": "panel3.serv00.com" },  
-  { "username": "zhaogao", "password": "daqinzhonggong", "panel": "panel1.serv00.com" },  
-  { "username": "heiheihei", "password": "shaibopengke", "panel": "panel.ct8.pl" }  
+---
+
+### Step 2: Create `ACCOUNTS_JSON` Secret
+
+```json
+[
+  { "username": "your_username", "password": "your_password", "panel": "panel3.serv00.com" },
+  { "username": "your_username2", "password": "your_password2", "panel": "panel1.serv00.com" }
 ]
 ```
 
-> The `panel` parameter is the panel number, which is the value in the `panel*.serv00.com` from the registration email you received.
+> 💡 **Tip**: The `panel` parameter is the panel address from your registration email, e.g., `panel3.serv00.com`
 
-4. **Optional** Creating two parameters `Secret` for the Telegram bot: `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID`
+---
 
-## Unable to SSH Login
+### Step 3 (Optional): Configure Notification
 
-> If you cannot log in, it is due to an IP Ban, click here to unlock: [Ban](https://www.serv00.com/ip_unban/)
+To receive login result push notifications via Telegram or Enterprise WeChat, create the following secrets:
 
-> If still unable to log in: Please use `FinalShell` below, and check `Smart Overseas Acceleration`. If login fails, choose `Cancel` in the pop-up box, and enter `[the SSH password from your email]` in the pop-up box.
+| Secret Name | Description | Example |
+|-------------|-------------|---------|
+| `NOTIFY_TOKEN` | Telegram Bot Token (contains `:`), or WeChat Work Webhook Key (no `:`) | `123456:ABC-DEF...` or `a1b2c3d4e5f6...` |
+| `NOTIFY_ID` | Chat ID (Telegram), or member mobile number (Enterprise WeChat @mention) | `123456789` or `13800138000` |
 
-## FinalShell
+> 💡 The system auto-detects the channel: if `NOTIFY_TOKEN` contains `:`, it sends to Telegram; otherwise it sends to Enterprise WeChat.
 
-FinalShell is an integrated server and network management software, not only an SSH client but also a powerful development and operations tool that fully meets the needs of developers and operators.
+## 🛠️ Tech Stack
 
-### Features
+- **Runtime**: Node.js 20+
+- **Browser Automation**: [Puppeteer](https://pptr.dev/)
+- **HTTP Client**: [Axios](https://axios-http.com/)
+- **Scheduler**: [GitHub Actions](https://github.com/features/actions)
 
-Cloud synchronization, free overseas server remote desktop acceleration, SSH acceleration, localized command input box with auto-completion, command history, and custom command parameters.
+## 📁 Project Structure
 
-- Windows X64 version, download address: <http://www.hostbuf.com/downloads/finalshell_windows_x64.exe>
+```
+mydevil/
+├── src/
+│   └── main.js          # Main entry point
+├── .github/
+│   └── workflows/
+│       └── login.yml    # GitHub Actions config
+├── README.md
+└── README_CN.md
+```
 
-- macOS Arm version, supporting m1, m2, m3 CPUs, download address: <http://www.hostbuf.com/downloads/finalshell_macos_arm64.pkg>
+## ⚠️ Important Notes
 
-- macOS X64 version, supporting older Intel CPUs, download address: <http://www.hostbuf.com/downloads/finalshell_macos_x64.pkg>
+> **⚠️ Storage Limit Reminder**
+>
+> Although Serv00 offers a 10-year usage period, log files cannot be cleared. Under storage constraints, **avoid** running high-traffic services or frequent tasks that generate large log files.
 
-- Linux X64 version, download address: <http://www.hostbuf.com/downloads/finalshell_linux_x64.deb>
+## 🔗 Related Links
 
-- Linux Arm64 version, download address: <http://www.hostbuf.com/downloads/finalshell_linux_arm64.deb>
+- [Serv00 PHP Config](https://docs.serv00.com/PHP/#php-version)
+- [Memcached Config](https://docs.serv00.com/Memcached/) — Start command: `memcached -s /usr/home/lopins/domains/buchmistrz.pl/memcached.sock -m 32 -d`
+- [Redis Config](https://docs.serv00.com/Memcached/)
 
-- Linux LoongArch64 Longxin version, download address: <http://www.hostbuf.com/downloads/finalshell_linux_loong64.deb>
+---
 
-## Other Services
+<div align="center">
 
-- PHP Configuration: <https://docs.serv00.com/PHP/#php-version>
+Made with ❤️ by [lopinx](https://github.com/lopinx)
 
-- Memcached Configuration: <https://docs.serv00.com/Memcached/>
-
-  Start: memcached -s /usr/home/LOGIN/domains/DOMAIN/memcached.sock -d
-
-- Redis Configuration: <https://docs.serv00.com/Memcached/>
-
-## Special Note
-
-Although serv00 has a 10-year usage period, it cannot clear logs generated by Apache and other services. Under capacity constraints, high-traffic services that generate large logs and high-frequency tasks are not recommended.
-
-## Star Trend
-
-[![Stargazers Over Time](https://starchart.cc/lopins/serv00-auto-scripts.svg?variant=adaptive)](https://starchart.cc/lopins/serv00-auto-scripts)
-
-## JSON Generator
-
-- <https://lopins.github.io/serv00-auto-scripts/>
+</div>
