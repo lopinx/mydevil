@@ -26,13 +26,16 @@ async function sendWecomMessage(key, message) {
     console.log('企业微信通知发送成功');
 }
 
-async function sendNotifications(token, chatId, wecomKey, message) {
+async function sendNotifications(token, id, message) {
     const tasks = [];
-    if (token && chatId) {
-        tasks.push(sendTelegramMessage(token, chatId, message));
-    }
-    if (wecomKey) {
-        tasks.push(sendWecomMessage(wecomKey, message));
+    if (token && id) {
+        // 判断是企业微信还是 Telegram：token 不含冒号且 id 是手机号 → 企业微信
+        const isWecom = !token.includes(':');
+        if (isWecom) {
+            tasks.push(sendWecomMessage(token, message));
+        } else {
+            tasks.push(sendTelegramMessage(token, id, message));
+        }
     }
     if (tasks.length > 0) {
         await Promise.all(tasks);
@@ -42,15 +45,14 @@ async function sendNotifications(token, chatId, wecomKey, message) {
 (async () => {
     const __dirname = path.dirname(fileURLToPath(import.meta.url));
     const accounts = JSON.parse(fs.readFileSync(path.join(__dirname, '../accounts.json'), 'utf-8'));
-    const telegramToken = process.env.TELEGRAM_BOT_TOKEN;
-    const telegramChatId = process.env.TELEGRAM_CHAT_ID;
-    const wecomKey = process.env.WECOM_KEY;
+    const notifyToken = process.env.NOTIFY_TOKEN;
+    const notifyId = process.env.NOTIFY_ID;
 
     for (const account of accounts) {
         const { username, password, panel } = account;
 
-        const browser = await puppeteer.launch({ 
-            headless: false, 
+        const browser = await puppeteer.launch({
+            headless: false,
             args: [
                 '--no-sandbox',
                 '--disable-setuid-sandbox',
@@ -77,7 +79,7 @@ async function sendNotifications(token, chatId, wecomKey, message) {
             await page.type('input[name="password"]', password);
 
             const loginButton = await page.$('div.login-form__button button[type="submit"]');
-            
+
             if (!loginButton) throw new Error('无法找到登录按钮');
             await loginButton.click();
 
@@ -92,18 +94,18 @@ async function sendNotifications(token, chatId, wecomKey, message) {
                 const nowUtc = formatToISO(new Date());
                 const nowBeijing = formatToISO(new Date(new Date().getTime() + 8 * 60 * 60 * 1000));
                 const successMessage = `账号 ${username} 于北京时间 ${nowBeijing}（UTC时间 ${nowUtc}）登录成功！`;
-                await sendNotifications(telegramToken, telegramChatId, wecomKey, successMessage);
+                await sendNotifications(notifyToken, notifyId, successMessage);
             } else {
                 const failMessage = `账号 ${username} 登录失败，请检查账号和密码是否正确。`;
-                await sendNotifications(telegramToken, telegramChatId, wecomKey, failMessage);
+                await sendNotifications(notifyToken, notifyId, failMessage);
             }
         } catch (error) {
             const errorMessage = `账号 ${username} 登录时出现错误: ${error.message}`;
-            await sendNotifications(telegramToken, telegramChatId, wecomKey, errorMessage);
+            await sendNotifications(notifyToken, notifyId, errorMessage);
         } finally {
             await page.close();
             await browser.close();
-            const delay = Math.floor(Math.random() * 5000) + 1000; // 随机延时1秒到5秒之间
+            const delay = Math.floor(Math.random() * 5000) + 1000;
             await delayTime(delay);
         }
     }
