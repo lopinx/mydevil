@@ -37,7 +37,7 @@
 |------|------|
 | 🤖 **自动化登录** | 使用 Puppeteer 模拟浏览器自动登录面板 |
 | 📅 **定时任务** | GitHub Actions 每月 1 号自动执行 |
-| 🔔 **消息通知** | 支持 Telegram Bot 推送登录结果 |
+| 🔔 **消息通知** | 支持 Telegram Bot 和企业微信推送登录结果 |
 | 🔒 **安全存储** | 账号信息以 Secret 形式保存在 GitHub |
 | 🌐 **多面板支持** | 兼容 panel1~panelN 所有 Serv00/CT8 面板 |
 
@@ -66,14 +66,16 @@
 
 ---
 
-### 第三步（可选）：配置 Telegram 通知
+### 第三步（可选）：配置通知
 
-如需登录结果推送至 Telegram，额外创建两个 Secret：
+如需登录结果推送，创建以下两个 Secret：
 
-| Secret 名称 | 说明 |
-|-------------|------|
-| `TELEGRAM_BOT_TOKEN` | Telegram Bot Token |
-| `TELEGRAM_CHAT_ID` | 你的 Chat ID |
+| Secret 名称 | 说明 | 示例 |
+|-------------|------|------|
+| `NOTIFY_TOKEN` | Telegram Bot Token（含 `:`），或企业微信群机器人 Key（不含 `:`） | `123456:ABC-DEF...` 或 `a1b2c3d4e5f6...` |
+| `NOTIFY_ID` | Chat ID（Telegram），或成员手机号（企业微信 @提醒） | `123456789` 或 `13800138000` |
+
+> 💡 系统自动识别通道类型：`NOTIFY_TOKEN` 含 `:` 则发送 Telegram；否则发送企业微信。
 
 ## 🛠️ 技术栈
 

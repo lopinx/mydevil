@@ -7,7 +7,8 @@
 ## 目录结构
 
 ```
-E:\Code\mydevil\
+```
+persistent/home/lopins/Documents/Codes/mydevil/
 ├── src\
 │   └── main.js          # 主程序：Puppeteer 登录逻辑
 ├── docs\
@@ -30,7 +31,7 @@ node src/main.js
 ### GitHub Actions（推荐）
 - 触发方式：每月1号 13:14 UTC 自动运行，或手动触发
 - 运行环境：ubuntu-latest，Node.js 20.x
-- 需要配置 Secrets：`ACCOUNTS_JSON`、`TELEGRAM_BOT_TOKEN`（可选）、`TELEGRAM_CHAT_ID`（可选）
+- 需要配置 Secrets：`ACCOUNTS_JSON`、`NOTIFY_TOKEN`（可选）、`NOTIFY_ID`（可选）
 
 ## 账号配置格式
 
@@ -49,7 +50,7 @@ node src/main.js
 1. 读取 `accounts.json` 中的账号列表
 2. 遍历每个账号，使用 Puppeteer 启动无头浏览器
 3. 访问对应面板登录页，自动填充用户名/密码并提交
-4. 检查登录状态，发送 Telegram 通知（如配置了 bot）
+4. 检查登录状态，发送通知（Telegram 或企业微信，如配置了）
 5. 每个账号登录后随机延迟 1-5 秒后继续下一个
 
 ## Puppeteer 配置
@@ -79,7 +80,7 @@ node src/main.js
 - 使用 ES Module（`"type": "module"`）
 - 文件路径使用 `path` 和 `fileURLToPath` 处理
 - 时间输出同时提供 UTC 和北京时间（+8）
-- 错误时发送 Telegram 通知，包含错误信息
+- 错误时发送通知（Telegram 或企业微信），包含错误信息
 
 ## 相关文档
 

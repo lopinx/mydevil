@@ -37,7 +37,7 @@
 |---------|-------------|
 | 🤖 **Auto Login** | Uses Puppeteer to automate browser login to control panels |
 | 📅 **Scheduled Tasks** | GitHub Actions runs automatically on the 1st of every month |
-| 🔔 **Notifications** | Supports Telegram Bot to push login results |
+| 🔔 **Notifications** | Supports Telegram Bot and WeChat Work (Enterprise WeChat) to push login results |
 | 🔒 **Secure Storage** | Account info stored as GitHub Secrets |
 | 🌐 **Multi-Panel Support** | Compatible with all panel1~panelN Serv00/CT8 panels |
 
@@ -66,14 +66,16 @@
 
 ---
 
-### Step 3 (Optional): Configure Telegram Notifications
+### Step 3 (Optional): Configure Notification
 
-To receive login result push notifications via Telegram, create two additional secrets:
+To receive login result push notifications via Telegram or Enterprise WeChat, create the following secrets:
 
-| Secret Name | Description |
-|-------------|-------------|
-| `TELEGRAM_BOT_TOKEN` | Telegram Bot Token |
-| `TELEGRAM_CHAT_ID` | Your Chat ID |
+| Secret Name | Description | Example |
+|-------------|-------------|---------|
+| `NOTIFY_TOKEN` | Telegram Bot Token (contains `:`), or WeChat Work Webhook Key (no `:`) | `123456:ABC-DEF...` or `a1b2c3d4e5f6...` |
+| `NOTIFY_ID` | Chat ID (Telegram), or member mobile number (Enterprise WeChat @mention) | `123456789` or `13800138000` |
+
+> 💡 The system auto-detects the channel: if `NOTIFY_TOKEN` contains `:`, it sends to Telegram; otherwise it sends to Enterprise WeChat.
 
 ## 🛠️ Tech Stack
 
