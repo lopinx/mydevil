@@ -19,9 +19,34 @@ async function sendTelegramMessage(token, chatId, message) {
         text: message
     };
     try {
-        const response = await axios.post(url, data);
+        await axios.post(url, data);
+        console.log('Telegram 通知发送成功');
     } catch (error) {
-        console.error('Telegram 消息发生失败');
+        console.error('Telegram 消息发送失败:', error.message);
+    }
+}
+
+async function sendWecomMessage(webhookUrl, message) {
+    const url = `${webhookUrl}`;
+    const data = {
+        msgtype: 'text',
+        text: {
+            content: message
+        }
+    };
+    try {
+        await axios.post(url, data);
+        console.log('企业微信通知发送成功');
+    } catch (error) {
+        console.error('企业微信消息发送失败:', error.message);
+    }
+}
+
+async function sendNotification(type, token, chatId, webhookUrl, message) {
+    if (type === 'telegram' && token && chatId) {
+        await sendTelegramMessage(token, chatId, message);
+    } else if (type === 'wecom' && webhookUrl) {
+        await sendWecomMessage(webhookUrl, message);
     }
 }
 
@@ -30,6 +55,7 @@ async function sendTelegramMessage(token, chatId, message) {
     const accounts = JSON.parse(fs.readFileSync(path.join(__dirname, '../accounts.json'), 'utf-8'));
     const telegramToken = process.env.TELEGRAM_BOT_TOKEN;
     const telegramChatId = process.env.TELEGRAM_CHAT_ID;
+    const wecomWebhookUrl = process.env.WECOM_WEBHOOK_URL;
 
     for (const account of accounts) {
         const { username, password, panel } = account;
@@ -76,18 +102,18 @@ async function sendTelegramMessage(token, chatId, message) {
             if (isLoggedIn) {
                 const nowUtc = formatToISO(new Date());
                 const nowBeijing = formatToISO(new Date(new Date().getTime() + 8 * 60 * 60 * 1000)); // 北京时间东8区
-                if (telegramToken && telegramChatId) {
-                    await sendTelegramMessage(telegramToken, telegramChatId, `账号 ${username} 于北京时间 ${nowBeijing}（UTC时间 ${nowUtc}）登录成功！`);
-                }
+                const successMessage = `账号 ${username} 于北京时间 ${nowBeijing}（UTC时间 ${nowUtc}）登录成功！`;
+                await sendNotification('telegram', telegramToken, telegramChatId, wecomWebhookUrl, successMessage);
+                await sendNotification('wecom', null, null, wecomWebhookUrl, successMessage);
             } else {
-                if (telegramToken && telegramChatId) {
-                    await sendTelegramMessage(telegramToken, telegramChatId, `账号 ${username} 登录失败，请检查账号和密码是否正确。`);
-                }
+                const failMessage = `账号 ${username} 登录失败，请检查账号和密码是否正确。`;
+                await sendNotification('telegram', telegramToken, telegramChatId, wecomWebhookUrl, failMessage);
+                await sendNotification('wecom', null, null, wecomWebhookUrl, failMessage);
             }
         } catch (error) {
-            if (telegramToken && telegramChatId) {
-                await sendTelegramMessage(telegramToken, telegramChatId, `账号 ${username} 登录时出现错误: ${error.message}`);
-            }
+            const errorMessage = `账号 ${username} 登录时出现错误: ${error.message}`;
+            await sendNotification('telegram', telegramToken, telegramChatId, wecomWebhookUrl, errorMessage);
+            await sendNotification('wecom', null, null, wecomWebhookUrl, errorMessage);
         } finally {
             await page.close();
             await browser.close();
