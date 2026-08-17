@@ -9,9 +9,9 @@
 <p>GitHub Actions tool for auto-renewing Serv00 / CT8 free hosting accounts</p>
 
 [![License](https://img.shields.io/badge/license-WTFPL-blue)](./LICENSE)
-[![Node.js](https://img.shields.io/badge/Node.js-20+-green)](https://nodejs.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-22+-green)](https://nodejs.org/)
 [![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-✓-orange)](https://github.com/features/actions)
-[![Puppeteer](https://img.shields.io/badge/Puppeteer-v24-brightgreen)](https://pptr.dev/)
+[![Puppeteer](https://img.shields.io/badge/Puppeteer-v25-brightgreen)](https://pptr.dev/)
 
 </div>
 

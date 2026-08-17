@@ -76,9 +76,5 @@ node src/main.js
 
 - 使用 ES Module（`"type": "module"`）
 - 文件路径使用 `path` 和 `fileURLToPath` 处理
-- 时间输出同时提供 UTC 和北京时间（+8）
+- 时间输出同时提供 UTC 和北京时间（+8） — 已通过注释说明移除
 - 错误时发送通知（Telegram 或企业微信），包含错误信息
-
-## 相关文档
-
-- README_CN.md — 中文说明
