@@ -4,15 +4,10 @@ import puppeteer from 'puppeteer';
 import axios from 'axios';
 import { fileURLToPath } from 'url';
 
-async function delayTime(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
 async function sendTelegramMessage(token, chatId, message) {
     const url = `https://api.telegram.org/bot${token}/sendMessage`;
     const data = { chat_id: chatId, text: message };
     await axios.post(url, data);
-    console.log('Telegram 通知发送成功');
 }
 
 async function sendWecomMessage(token, id, message) {
@@ -24,22 +19,17 @@ async function sendWecomMessage(token, id, message) {
         }
     };
     await axios.post(url, data);
-    console.log('企业微信通知发送成功');
 }
 
 async function sendNotifications(token, id, message) {
     const tasks = [];
     if (token && id) {
         const isWecom = !token.includes(':');
-        if (isWecom) {
-            tasks.push(sendWecomMessage(token, id, message));
-        } else {
-            tasks.push(sendTelegramMessage(token, id, message));
-        }
+        tasks.push(isWecom
+            ? sendWecomMessage(token, id, message)
+            : sendTelegramMessage(token, id, message));
     }
-    if (tasks.length > 0) {
-        await Promise.all(tasks);
-    }
+    await Promise.all(tasks);
 }
 
 (async () => {
@@ -65,46 +55,36 @@ async function sendNotifications(token, id, message) {
         });
         const page = await browser.newPage();
 
-        let url = `https://${panel}/login/?next=/`;
+        const url = `https://${panel}/login/?next=/`;
 
         try {
             await page.goto(url);
 
-            const usernameInput = await page.$('input[name="username"]');
-            if (usernameInput) {
-                await usernameInput.click({ clickCount: 3 });
-                await usernameInput.press('Backspace');
-            }
+            await page.click('input[name="username"]');
+            await page.keyboard.press('Control+a');
+            await page.keyboard.press('Backspace');
             await page.type('input[name="username"]', username);
             await page.type('input[name="password"]', password);
 
             const loginButton = await page.$('div.login-form__button button[type="submit"]');
-
             if (!loginButton) throw new Error('无法找到登录按钮');
             await loginButton.click();
-
             await page.waitForNavigation();
 
-            const isLoggedIn = await page.evaluate(() => {
-                const logoutButton = document.querySelector('a[href="/logout/"]');
-                return logoutButton !== null;
-            });
+            const isLoggedIn = await page.evaluate(() =>
+                document.querySelector('a[href="/logout/"]') !== null
+            );
 
-            if (isLoggedIn) {
-                const successMessage = `账号 ${username} 登录成功！`;
-                await sendNotifications(notifyToken, notifyId, successMessage);
-            } else {
-                const failMessage = `账号 ${username} 登录失败，请检查账号和密码是否正确。`;
-                await sendNotifications(notifyToken, notifyId, failMessage);
-            }
+            const message = isLoggedIn
+                ? `账号 ${username} 登录成功！`
+                : `账号 ${username} 登录失败，请检查账号和密码是否正确。`;
+            await sendNotifications(notifyToken, notifyId, message);
         } catch (error) {
-            const errorMessage = `账号 ${username} 登录时出现错误: ${error.message}`;
-            await sendNotifications(notifyToken, notifyId, errorMessage);
+            await sendNotifications(notifyToken, notifyId, `账号 ${username} 登录时出现错误: ${error.message}`);
         } finally {
             await page.close();
             await browser.close();
-            const delay = Math.floor(Math.random() * 5000) + 1000;
-            await delayTime(delay);
+            await new Promise(resolve => setTimeout(resolve, Math.random() * 4000 + 1000));
         }
     }
 })();
