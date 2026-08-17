@@ -19,9 +19,14 @@ async function sendTelegramMessage(token, chatId, message) {
     console.log('Telegram 通知发送成功');
 }
 
-async function sendWecomMessage(key, message) {
-    const url = `https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=${key}`;
-    const data = { msgtype: 'text', text: { content: message } };
+async function sendWecomMessage(token, id, message) {
+    const url = `https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=${token}`;
+    const data = {
+        msgtype: 'text',
+        text: {
+            content: id ? `@${id} ${message}` : message
+        }
+    };
     await axios.post(url, data);
     console.log('企业微信通知发送成功');
 }
@@ -29,10 +34,9 @@ async function sendWecomMessage(key, message) {
 async function sendNotifications(token, id, message) {
     const tasks = [];
     if (token && id) {
-        // 判断是企业微信还是 Telegram：token 不含冒号且 id 是手机号 → 企业微信
         const isWecom = !token.includes(':');
         if (isWecom) {
-            tasks.push(sendWecomMessage(token, message));
+            tasks.push(sendWecomMessage(token, id, message));
         } else {
             tasks.push(sendTelegramMessage(token, id, message));
         }
