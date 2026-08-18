@@ -41,6 +41,51 @@
 | 🔒 **Secure Storage** | Account info stored as GitHub Secrets |
 | 🌐 **Multi-Panel Support** | Compatible with all panel1~panelN Serv00/CT8 panels |
 
+## 🛠️ Local Development
+
+### Prerequisites
+
+- Node.js 22+
+- npm or pnpm
+
+### Setup
+
+```bash
+git clone <repository-url>
+cd mydevil
+npm install
+```
+
+### Create accounts.json
+
+Create a file `accounts.json` in the project root:
+
+```json
+[
+  { "username": "your_username", "password": "your_password", "panel": "panel3.serv00.com" }
+]
+```
+
+> ⚠️ `accounts.json` is in `.gitignore` and will not be committed.
+
+### Run Locally
+
+```bash
+node src/main.js
+```
+
+Or with notification support:
+
+```bash
+# Telegram
+NOTIFY_TOKEN="123456:ABC-DEF..." NOTIFY_ID="123456789" node src/main.js
+
+# Enterprise WeChat
+NOTIFY_TOKEN="a1b2c3d4e5f6..." NOTIFY_ID="13800138000" node src/main.js
+```
+
+> 💡 The browser opens visually by default (`headless: false`). For server/headless environments, set the `HEADLESS` env var (not yet supported — edit `src/main.js` to change `headless: false` → `true`).
+
 ## 📋 Usage
 
 ### Step 1: Configure GitHub Secrets
