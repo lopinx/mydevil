@@ -68,9 +68,9 @@ async function sendNotifications(token, id, message) {
                 document.querySelector('a[href="/logout/"]') !== null
             );
 
-            results.push(`${username}: ${isLoggedIn ? '登录成功' : '登录失败'}`);
+            results.push(`${username}: ${isLoggedIn ? 'Success' : 'Failed'}`);
         } catch (error) {
-            results.push(`${username}: 错误 - ${error.message}`);
+            results.push(`${username}: Error - ${error.message}`);
         } finally {
             await page.close();
             await new Promise(resolve => setTimeout(resolve, Math.random() * 1000 + 500));
@@ -79,15 +79,25 @@ async function sendNotifications(token, id, message) {
 
     await browser.close();
 
-    const success = results.filter(r => r.includes('登录成功')).length;
-    const fail = results.filter(r => r.includes('登录失败') || r.includes('错误')).length;
-    const lines = [
-        '🔄 Serv00/CT8 自动续签报告',
-        `📊 共 ${results.length} 个账号 | ✅ 成功 ${success} | ❌ 失败 ${fail}`,
-        '─'.repeat(36),
-        ...results.map(r => r.includes('登录成功') ? `✅ ${r.replace('登录成功', '登录成功')}` : r.includes('登录失败') ? `❌ ${r}` : `⚠️ ${r}`),
-        '─'.repeat(36),
-        `⏰ ${new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' })}`,
-    ].join('\n');
+    const isWecom = !notifyToken.includes(':');
+    const success = results.filter(r => r.includes('成功')).length;
+    const fail = results.filter(r => r.includes('失败') || r.includes('错误')).length;
+    const lines = isWecom
+        ? [
+              '🔄 Serv00/CT8 自动续签报告',
+              `📊 共 ${results.length} 个账号 | ✅ 成功 ${success} | ❌ 失败 ${fail}`,
+              '─'.repeat(36),
+              ...results.map(r => r.includes('成功') ? `✅ ${r}` : r.includes('失败') ? `❌ ${r}` : `⚠️ ${r}`),
+              '─'.repeat(36),
+              `⏰ ${new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' })}`,
+          ].join('\n')
+        : [
+              '🔄 Serv00/CT8 Auto Renewal Report',
+              `📊 Total: ${results.length} | ✅ Success: ${success} | ❌ Failed: ${fail}`,
+              '─'.repeat(40),
+              ...results.map(r => r.includes('Success') ? `✅ ${r}` : r.includes('Failed') ? `❌ ${r}` : `⚠️ ${r}`),
+              '─'.repeat(40),
+              `⏰ ${new Date().toLocaleString('en-US', { timeZone: 'Asia/Shanghai' })}`,
+          ].join('\n');
     await sendNotifications(notifyToken, notifyId, lines);
 })();
