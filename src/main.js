@@ -81,8 +81,8 @@ async function sendNotifications(token, id, message) {
     await browser.close();
 
     const isWecom = !notifyToken.includes(':');
-    const success = results.filter(r => r.includes('成功')).length;
-    const fail = results.filter(r => r.includes('失败') || r.includes('错误')).length;
+    const success = results.filter(r => r.includes('Success')).length;
+    const fail = results.length - success;
     const sep = '━'.repeat(32);
     const lines = isWecom
         ? [

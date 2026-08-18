@@ -77,7 +77,7 @@
 
 ## 🛠️ 技术栈
 
-- **运行时**: Node.js 20+
+- **运行时**: Node.js 22+
 - **浏览器自动化**: [Puppeteer](https://pptr.dev/)
 - **HTTP 请求**: [Axios](https://axios-http.com/)
 - **调度引擎**: [GitHub Actions](https://github.com/features/actions)
