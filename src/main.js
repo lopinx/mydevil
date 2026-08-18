@@ -22,8 +22,9 @@ async function sendWecomMessage(token, id, message) {
 }
 
 async function sendNotifications(token, id, message) {
-    if (!token || !id) return;
+    if (!token) return;
     const isWecom = !token.includes(':');
+    if (!isWecom && !id) return;
     const sendFn = isWecom ? sendWecomMessage : sendTelegramMessage;
     await sendFn(token, id, message);
 }
