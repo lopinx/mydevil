@@ -122,7 +122,7 @@ To receive login result push notifications via Telegram or Enterprise WeChat, cr
 
 ## 🛠️ Tech Stack
 
-- **Runtime**: Node.js 20+
+- **Runtime**: Node.js 22+
 - **Browser Automation**: [Puppeteer](https://pptr.dev/)
 - **HTTP Client**: [Axios](https://axios-http.com/)
 - **Scheduler**: [GitHub Actions](https://github.com/features/actions)
