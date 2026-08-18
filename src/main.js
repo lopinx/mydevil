@@ -56,8 +56,8 @@ async function sendNotifications(token, id, message) {
 
         try {
             await page.goto(url);
-            await page.fill('input[name="username"]', username);
-            await page.fill('input[name="password"]', password);
+            await page.type('input[name="username"]', username);
+            await page.type('input[name="password"]', password);
 
             const loginButton = await page.$('div.login-form__button button[type="submit"]');
             if (!loginButton) throw new Error('无法找到登录按钮');
