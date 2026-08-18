@@ -83,21 +83,30 @@ async function sendNotifications(token, id, message) {
     const isWecom = !notifyToken.includes(':');
     const success = results.filter(r => r.includes('成功')).length;
     const fail = results.filter(r => r.includes('失败') || r.includes('错误')).length;
+    const sep = '━'.repeat(32);
     const lines = isWecom
         ? [
-              '🔄 Serv00/CT8 自动续签报告',
-              `📊 共 ${results.length} 个账号 | ✅ 成功 ${success} | ❌ 失败 ${fail}`,
-              '─'.repeat(36),
-              ...results.map(r => r.includes('成功') ? `✅ ${r}` : r.includes('失败') ? `❌ ${r}` : `⚠️ ${r}`),
-              '─'.repeat(36),
+              `🔄 Serv00/CT8 自动续签报告`,
+              `📊 共 ${results.length} 个账号 · ✅ 成功 ${success} · ❌ 失败 ${fail}`,
+              sep,
+              ...accounts.map((a, i) => {
+                  const r = results[i];
+                  const icon = r.includes('成功') ? '✅' : r.includes('失败') ? '❌' : '⚠️';
+                  return `${icon} ${a.username}@${a.panel}`;
+              }),
+              sep,
               `⏰ ${new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' })}`,
           ].join('\n')
         : [
-              '🔄 Serv00/CT8 Auto Renewal Report',
-              `📊 Total: ${results.length} | ✅ Success: ${success} | ❌ Failed: ${fail}`,
-              '─'.repeat(40),
-              ...results.map(r => r.includes('Success') ? `✅ ${r}` : r.includes('Failed') ? `❌ ${r}` : `⚠️ ${r}`),
-              '─'.repeat(40),
+              `🔄 Serv00/CT8 Auto Renewal Report`,
+              `📊 Total: ${results.length} · ✅ Success: ${success} · ❌ Failed: ${fail}`,
+              sep,
+              ...accounts.map((a, i) => {
+                  const r = results[i];
+                  const icon = r.includes('Success') ? '✅' : r.includes('Failed') ? '❌' : '⚠️';
+                  return `${icon} ${a.username}@${a.panel}`;
+              }),
+              sep,
               `⏰ ${new Date().toLocaleString('en-US', { timeZone: 'Asia/Shanghai' })}`,
           ].join('\n');
     await sendNotifications(notifyToken, notifyId, lines);
