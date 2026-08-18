@@ -91,28 +91,28 @@ async function sendNotifications(token, id, message) {
     const isWecom = !notifyToken.includes(':');
     const success = results.filter(r => r.includes('Success')).length;
     const fail = results.length - success;
-    const sep = '━'.repeat(28);
+    const sep = '━'.repeat(30);
     const lines = isWecom
         ? [
               `🔄 Serv00/CT8 自动续签报告`,
-              `📊 共 ${results.length} 个账号 · ✅ 成功 ${success} · ❌ 失败 ${fail}`,
+              `📊 共 ${results.length} 账号 · ✅ 成功 ${success} · ❌ 失败 ${fail}`,
               sep,
               ...accounts.map((a, i) => {
                   const r = results[i];
                   const icon = r.includes('成功') ? '✅' : r.includes('失败') ? '❌' : '⚠️';
-                  return `${icon} ${a.username}@${a.panel}`;
+                  return `${icon} ${a.username} · ${a.panel}`;
               }),
               sep,
               `⏰ ${new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' })}`,
           ].join('\n')
         : [
               `🔄 Serv00/CT8 Auto Renewal Report`,
-              `📊 Total: ${results.length} · ✅ Success: ${success} · ❌ Failed: ${fail}`,
+              `📊 ${results.length} accounts · ✅ ${success} ok · ❌ ${fail} fail`,
               sep,
               ...accounts.map((a, i) => {
                   const r = results[i];
                   const icon = r.includes('Success') ? '✅' : r.includes('Failed') ? '❌' : '⚠️';
-                  return `${icon} ${a.username}@${a.panel}`;
+                  return `${icon} ${a.username} · ${a.panel}`;
               }),
               sep,
               `⏰ ${new Date().toLocaleString('en-US', { timeZone: 'Asia/Shanghai' })}`,
