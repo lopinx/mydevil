@@ -9,9 +9,9 @@
 <p>自动续签 Serv00 / CT8 免费主机账号的 GitHub Actions 工具</p>
 
 [![License](https://img.shields.io/badge/license-WTFPL-blue)](./LICENSE)
-[![Node.js](https://img.shields.io/badge/Node.js-20+-green)](https://nodejs.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-22+-green)](https://nodejs.org/)
 [![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-✓-orange)](https://github.com/features/actions)
-[![Puppeteer](https://img.shields.io/badge/Puppeteer-v24-brightgreen)](https://pptr.dev/)
+[![Puppeteer](https://img.shields.io/badge/Puppeteer-v25-brightgreen)](https://pptr.dev/)
 
 </div>
 
@@ -77,7 +77,7 @@
 
 ## 🛠️ 技术栈
 
-- **运行时**: Node.js 20+
+- **运行时**: Node.js 22+
 - **浏览器自动化**: [Puppeteer](https://pptr.dev/)
 - **HTTP 请求**: [Axios](https://axios-http.com/)
 - **调度引擎**: [GitHub Actions](https://github.com/features/actions)

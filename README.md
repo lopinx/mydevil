@@ -9,9 +9,9 @@
 <p>GitHub Actions tool for auto-renewing Serv00 / CT8 free hosting accounts</p>
 
 [![License](https://img.shields.io/badge/license-WTFPL-blue)](./LICENSE)
-[![Node.js](https://img.shields.io/badge/Node.js-20+-green)](https://nodejs.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-22+-green)](https://nodejs.org/)
 [![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-✓-orange)](https://github.com/features/actions)
-[![Puppeteer](https://img.shields.io/badge/Puppeteer-v24-brightgreen)](https://pptr.dev/)
+[![Puppeteer](https://img.shields.io/badge/Puppeteer-v25-brightgreen)](https://pptr.dev/)
 
 </div>
 
@@ -40,6 +40,39 @@
 | 🔔 **Notifications** | Supports Telegram Bot and WeChat Work (Enterprise WeChat) to push login results |
 | 🔒 **Secure Storage** | Account info stored as GitHub Secrets |
 | 🌐 **Multi-Panel Support** | Compatible with all panel1~panelN Serv00/CT8 panels |
+
+## 🛠️ Local Development
+
+### Prerequisites
+
+- Node.js 22+
+- npm or pnpm
+
+### Setup
+
+```bash
+git clone <repository-url>
+cd mydevil
+npm install
+```
+
+### Create accounts.json
+
+Create a file `accounts.json` in the project root:
+
+```json
+[
+  { "username": "your_username", "password": "your_password", "panel": "panel3.serv00.com" }
+]
+```
+
+> ⚠️ `accounts.json` is in `.gitignore` and will not be committed.
+
+### Run Locally
+
+```bash
+node src/main.js
+```
 
 ## 📋 Usage
 
@@ -77,7 +110,7 @@ To receive login result push notifications via Telegram or Enterprise WeChat, cr
 
 ## 🛠️ Tech Stack
 
-- **Runtime**: Node.js 20+
+- **Runtime**: Node.js 22+
 - **Browser Automation**: [Puppeteer](https://pptr.dev/)
 - **HTTP Client**: [Axios](https://axios-http.com/)
 - **Scheduler**: [GitHub Actions](https://github.com/features/actions)
