@@ -79,6 +79,15 @@ async function sendNotifications(token, id, message) {
 
     await browser.close();
 
-    const message = `共 ${results.length} 个账号\n${results.join('\n')}`;
-    await sendNotifications(notifyToken, notifyId, message);
+    const success = results.filter(r => r.includes('登录成功')).length;
+    const fail = results.filter(r => r.includes('登录失败') || r.includes('错误')).length;
+    const lines = [
+        '🔄 Serv00/CT8 自动续签报告',
+        `📊 共 ${results.length} 个账号 | ✅ 成功 ${success} | ❌ 失败 ${fail}`,
+        '─'.repeat(36),
+        ...results.map(r => r.includes('登录成功') ? `✅ ${r.replace('登录成功', '登录成功')}` : r.includes('登录失败') ? `❌ ${r}` : `⚠️ ${r}`),
+        '─'.repeat(36),
+        `⏰ ${new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' })}`,
+    ].join('\n');
+    await sendNotifications(notifyToken, notifyId, lines);
 })();
