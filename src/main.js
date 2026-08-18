@@ -42,7 +42,9 @@ async function sendNotifications(token, id, message) {
             '--disable-setuid-sandbox',
             '--disable-dev-shm-usage',
             '--disable-infobars',
-            '--disable-blink-features=AutomationControlled'
+            '--disable-blink-features=AutomationControlled',
+            '--disable-popup-blocking',
+            '--disable-notifications',
         ],
         defaultViewport: null,
         ignoreHTTPSErrors: true
