@@ -50,6 +50,12 @@ async function sendNotifications(token, id, message) {
         ignoreHTTPSErrors: true
     });
 
+    const cdp = await browser.newPage();
+    const client = await cdp.createCDPSession();
+    client.on('Page.javascriptDialogOpening', async () => {
+        await client.send('Page.handleJavaScriptDialog', { accept: false });
+    });
+
     const results = [];
 
     for (const account of accounts) {
