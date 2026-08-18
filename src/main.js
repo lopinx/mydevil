@@ -91,7 +91,7 @@ async function sendNotifications(token, id, message) {
     const isWecom = !notifyToken.includes(':');
     const success = results.filter(r => r.includes('Success')).length;
     const fail = results.length - success;
-    const sep = '━'.repeat(32);
+    const sep = '━'.repeat(28);
     const lines = isWecom
         ? [
               `🔄 Serv00/CT8 自动续签报告`,
