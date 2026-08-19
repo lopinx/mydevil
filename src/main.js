@@ -17,40 +17,32 @@ async function sendWecomMessage(token, id, message) {
     });
 }
 
-async function sendNotifications(token, id, message) {
-    if (!token) return;
-    const isWecom = !token.includes(':');
-    if (!isWecom && !id) return;
-    const fn = isWecom ? sendWecomMessage : sendTelegramMessage;
-    await fn(token, id, message);
+// token 含 ':' 为 Telegram，否则为企业微信
+function detectChannel(token) {
+    return token.includes(':') ? 'telegram' : 'wecom';
 }
 
-function buildMessage(accounts, results, isWecom) {
-    const success = results.filter(r => r.includes('Success')).length;
+function buildMessage(accounts, results, channel) {
+    const success = results.filter(r => r.endsWith('Success')).length;
     const fail = results.length - success;
+    const zh = channel === 'wecom';
+    const label = {
+        title: zh ? 'Serv00/CT8 自动续签报告' : 'Serv00/CT8 Auto Renewal Report',
+        stat: zh
+            ? `共 ${results.length} 账号 · 成功 ${success} · 失败 ${fail}`
+            : `${results.length} accounts · ${success} ok · ${fail} fail`,
+        ok: zh ? '成功' : 'Success',
+        fail: zh ? '失败' : 'Failed',
+    };
     const sep = '━'.repeat(10);
     const details = accounts.map((a, i) => {
-        const icon = results[i].includes('Success') ? '✅' : results[i].includes('Failed') ? '❌' : '⚠️';
-        return `${icon} ${a.username} · ${a.panel}`;
+        const r = results[i];
+        if (r.endsWith('Success')) return `${a.username} · ${a.panel} (${label.ok})`;
+        const err = r.includes('Error') ? r.split(' - ')[1] : label.fail;
+        return `${a.username} · ${a.panel} (${err})`;
     });
     const date = new Date().toLocaleString('en-US', { timeZone: 'Asia/Shanghai' });
-    return isWecom
-        ? [
-              `🔄 Serv00/CT8 自动续签报告`,
-              `📊 共 ${results.length} 账号 · ✅ 成功 ${success} · ❌ 失败 ${fail}`,
-              sep,
-              ...details,
-              sep,
-              `⏰ ${date}`,
-          ].join('\n')
-        : [
-              `🔄 Serv00/CT8 Auto Renewal Report`,
-              `📊 ${results.length} accounts · ✅ ${success} ok · ❌ ${fail} fail`,
-              sep,
-              ...details,
-              sep,
-              `⏰ ${date}`,
-          ].join('\n');
+    return [label.title, label.stat, sep, ...details, sep, date].join('\n');
 }
 
 (async () => {
@@ -74,12 +66,6 @@ function buildMessage(accounts, results, isWecom) {
         ignoreHTTPSErrors: true
     });
 
-    const cdp = await browser.newPage();
-    const client = await cdp.createCDPSession();
-    client.on('Page.javascriptDialogOpening', async () => {
-        await client.send('Page.handleJavaScriptDialog', { accept: false });
-    });
-
     const results = [];
 
     for (const account of accounts) {
@@ -94,8 +80,11 @@ function buildMessage(accounts, results, isWecom) {
 
             const loginButton = await page.$('div.login-form__button button[type="submit"]');
             if (!loginButton) throw new Error('Login button not found');
-            await loginButton.click();
-            await page.waitForNavigation();
+            // 同时等待点击后的跳转，避免 waitForNavigation 竞态
+            await Promise.all([
+                page.waitForNavigation({ waitUntil: 'networkidle0' }),
+                loginButton.click(),
+            ]);
 
             const isLoggedIn = await page.evaluate(() =>
                 document.querySelector('a[href="/logout/"]') !== null
@@ -112,7 +101,14 @@ function buildMessage(accounts, results, isWecom) {
 
     await browser.close();
 
-    const isWecom = !notifyToken.includes(':');
-    const message = buildMessage(accounts, results, isWecom);
-    await sendNotifications(notifyToken, notifyId, message);
+    if (notifyToken) {
+        const channel = detectChannel(notifyToken);
+        if (channel === 'telegram' && !notifyId) {
+            console.warn('NOTIFY_ID is required for Telegram notification');
+        } else {
+            const message = buildMessage(accounts, results, channel);
+            const send = channel === 'wecom' ? sendWecomMessage : sendTelegramMessage;
+            await send(notifyToken, notifyId, message);
+        }
+    }
 })();
